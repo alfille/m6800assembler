@@ -67,18 +67,31 @@ Character 'A
 --------
 Functions
 
+Definition:
 .FUNCTION Double(x) (2*x)
 
-Arbitrary number of arguments
+Usage:
+CMPA # Double(3)
+
+Any number of arguments
 Must return a number (not line of code)
+    note that the addressing mode is not given by the function
 
 -----------
 Macros
 
+Definition:
 .MACRO Double(x)
 LDAA x
 LSRA
+STAA x
 .ENDMACRO
+
+Usage
+Double( Range_for_sort )
+
+Any number of arguemnts
+Creaes lines of code (or data)
 
 ------------
 Conditional compilation
@@ -90,6 +103,8 @@ Conditional compilation
 
 Only .IF and .ENDIF are required
 condition must resolve to 0 or non-zero
+The condition must be evaluatable on the first pass, since otherwise the code size might
+change on the second pass)
 
 ------------
 Operators
