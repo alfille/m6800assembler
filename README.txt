@@ -39,7 +39,7 @@ optional arguments:
 
 Whirlwind tutorial
 
-Here is an example of code:
+Here is an example of M6800 assembly code (shown for styntax):
 
 Load_last_move_address:	LDX   PointerB2 ; DIRE ; DE B2    ; Load the Index Register
 Downstream_byte_loop:	LDAB    0,X ; INDX ; E6 00    ; Load the B ACCUMULATOR from Memory
@@ -56,17 +56,27 @@ Downstream_byte_loop:	LDAB    0,X ; INDX ; E6 00    ; Load the B ACCUMULATOR fro
 Return_60C1:	RTS         ; IMPL ; 39       ; Return from Subroutine
 
 Lines are in form of label: code ; comment
+    -- each component is optional (This example is from my disassembler, which puts the actual bytes in the comments)
+
 Labels are optional unless needed for jump or branch
+
 Code follows standard format with examples of different addressing modes shown
+    Use the -i command line option to see the full instruction set
+    Addressing modes for the M6800
+    Immediate: OP # value
+    Relative: OP branch relative to next location
+    Direct: OP address 1st pae
+    Extended: OP 2-byte adress
+    Indexed: OP value,X
+    Values can be a number, address, defined symbol, or expression (including a function)
+
 Comments are anythng after a ';' 
 
-Number format is decimal e.g. 16
-
-Hexidecimal $10 or 0x10 or 10H
-
-Binary %10000000
-
-Character 'A
+Number format is 
+    Decimal e.g. 16
+    Hexidecimal $10 or 0x10 or 10H
+    Binary %10000000
+    Character 'A
 
 --------
 Functions
@@ -80,6 +90,7 @@ CMPA # Double(3)
 Any number of arguments
 Must return a number (not line of code)
     note that the addressing mode is not given by the function
+    arbitrary complexity
 
 -----------
 Macros
@@ -112,6 +123,8 @@ change on the second pass)
 
 ------------
 Operators
+    Arbitrary complexity allowed. 
+    Usual arithetic syntax and operator precedence (but use parenthesies to avoid ambiguity)
 
 ()
 +-
@@ -123,10 +136,12 @@ Operators
 
 ------------
 Symbols (variables)
+
 Entrypoint .EQU value_or_expression
 
 -------------
 Arrays
+    In brackets []. Negativs values allowed.
 
 TestStart[4] is 4 bytes after TestStart
 
