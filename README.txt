@@ -15,7 +15,7 @@ Command Line
 
 $ python3 m6800assembler.py -h
 usage: m6800assembler.py [-h] [-r [ROM]] [-p [PROG]] [-o [OUTPUT]] [-l [LIST]]
-                         [-u [UNUSED]]
+                         [-u [UNUSED]] [-i [INSTRUCTION]]
 
 Motorola 6800 microprocessor assembly language compiler
 
@@ -31,6 +31,10 @@ optional arguments:
                         List all defined symbols and their values
   -u [UNUSED], --UNUSED [UNUSED]
                         List all unused symbols and their values
+  -i [INSTRUCTION], --INSTRUCTION [INSTRUCTION]
+                        Show M6800 Instgruction set sorted by
+                        code|name|mode|flags|size|time|comment
+
 ---------------------
 
 Whirlwind tutorial

@@ -232,16 +232,42 @@ class Op:
 
     def __init__( self, lst ):
         """ Load a single ling containing an assembly instruction -- self documenting format"""
-        self.code = lst[0] #byte
-        self.name = lst[1] #MNEMONIC
-        self.register = lst[2] #Registers used (not used)
-        self.size = lst[3] #command plus argument length (1-3 bytes)
-        self.mode = lst[4] #addressing mode
-        self.time = lst[5] #clock cycles (not used)
+        self.code  = lst[0] #byte
+        self.name  = lst[1] #MNEMONIC
+        self.flags = lst[2] #Registers used (not used)
+        self.size  = lst[3] #command plus argument length (1-3 bytes)
+        self.mode  = lst[4] #addressing mode
+        self.time  = lst[5] #clock cycles (not used)
         self.comment = lst[6] # explanatino (not used)
         # Load into dict
         Op.oplist[":".join([self.name,self.mode])]=self
         
+    @staticmethod
+    def Show( field ):
+        """Show the machine language op codes"""
+        if field.lower() == 'name':
+            s = lambda o:(o.name,o.mode)
+        elif field.lower() == 'flags':
+            s = lambda o:(o.flags,o.name,o.mode)
+        elif field.lower() == 'size':
+            s = lambda o:(o.size,o.name,o.mode)
+        elif field.lower() == 'mode':
+            s = lambda o:(o.mode,o.name)
+        elif field.lower() == 'time':
+            s = lambda o:(o.time,o.name,o.mode)
+        elif field.lower() == 'comment':
+            s = lambda o:(o.comment,o.name,o.mode)
+        elif field.lower() == 'code':
+            s = lambda o:o.code
+        else:
+            print("Unrecognized sort field:",field)
+            print("\tNot 'code', 'name', 'mode', 'size', 'time', 'flags' or 'comment'")
+            s = lambda o:o.code
+        print("M6800 Assembly Instructions")
+        print("HEX Name  Mode         Flags Size Time Comment")
+        for o in sorted(Op.oplist.values(),key=s):
+            print(" {:02X} {:5} {:13} {:7}  {:2d} {:3d}  {}".format(o.code,o.name,o.mode,o.flags,o.size,o.time,o.comment))
+    
     def Length( self ):
         return self.size
         
@@ -1443,6 +1469,7 @@ def CommandLine():
     cl.add_argument("-o","--OUTPUT",help="Assembly output (ROM file)",nargs='?', type=argparse.FileType('wb'))
     cl.add_argument("-l","--LIST",help="List all defined symbols and their values",nargs='?',type=argparse.FileType('w'), const=sys.stdout, default=False)
     cl.add_argument("-u","--UNUSED",help="List all unused symbols and their values",nargs='?',type=argparse.FileType('w'), const=sys.stdout, default=False)
+    cl.add_argument("-i","--INSTRUCTION",help="Show M6800 Instgruction set sorted by code|name|mode|flags|size|time|comment",nargs='?',default=None, const='code')
     return cl.parse_args()
 
     """
@@ -1459,6 +1486,10 @@ def main(args):
     LoadOplist()
     
     args = CommandLine() # Get args from command line
+    
+    if args.INSTRUCTION:
+        Op.Show( args.INSTRUCTION )
+        return 0
     
     rom_assembled = ReadAssemblerFile(args.PROG)
 
